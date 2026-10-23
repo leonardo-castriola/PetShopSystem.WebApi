@@ -18,6 +18,10 @@ namespace PetShopSystem.WebApi.Services
 
         public async Task<decimal> CalcularValorBanhoPorIdAsync(int petId)
         {
+            if (petId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(petId), "O ID do pet deve ser maior que zero.");
+            }
             // 1. Busca o pet no banco de dados SQLite de forma assíncrona
             var pet = await _context.Pets.FirstOrDefaultAsync(p => p.Id == petId);
 
@@ -25,6 +29,11 @@ namespace PetShopSystem.WebApi.Services
             if (pet == null)
             {
                 throw new KeyNotFoundException($"Pet com o ID {petId} não foi localizado no sistema.");
+            }
+
+            if (!double.IsFinite(pet.Peso) || pet.Peso <= 0)
+            {
+                throw new InvalidOperationException($"O pet com ID {petId} possui um peso inválido.");
             }
 
             decimal valorBase;

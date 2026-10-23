@@ -10,6 +10,6 @@ namespace PetShopSystem.WebApi.Data
         }
 
         // Isso criará a tabela "Pets" no SQLite
-        public DbSet<Pet> Pets { get; set; }
+        public DbSet<Pet> Pets { get; set; } = null!;
     }
 }

@@ -1,11 +1,41 @@
 @PetShopSystem.WebApi_HostAddress = http://localhost:5132
 
-GET {{PetShopSystem.WebApi_HostAddress}}/openapi/v1.json
+### Documentação Swagger JSON
+GET {{PetShopSystem.WebApi_HostAddress}}/swagger/v1/swagger.json
 Accept: application/json
 
-###
+### 1. Cadastrar um novo Pet (CREATE)
+POST {{PetShopSystem.WebApi_HostAddress}}/api/pet
+Content-Type: application/json
 
-GET {{PetShopSystem.WebApi_HostAddress}}/weatherforecast/
+{
+  "nome": "Rex",
+  "peso": 12.5,
+  "raca": 1
+}
+
+### 2. Listar todos os Pets (READ ALL)
+GET {{PetShopSystem.WebApi_HostAddress}}/api/pet
 Accept: application/json
 
-###
+### 3. Buscar Pet por ID (READ BY ID)
+GET {{PetShopSystem.WebApi_HostAddress}}/api/pet/1
+Accept: application/json
+
+### 4. Atualizar um Pet (UPDATE)
+PUT {{PetShopSystem.WebApi_HostAddress}}/api/pet/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "nome": "Rex Atualizado",
+  "peso": 14.0,
+  "raca": 1
+}
+
+### 5. Calcular valor do banho do Pet
+GET {{PetShopSystem.WebApi_HostAddress}}/api/pet/1/calcular-banho
+Accept: application/json
+
+### 6. Remover um Pet (DELETE)
+DELETE {{PetShopSystem.WebApi_HostAddress}}/api/pet/1
