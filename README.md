@@ -11,6 +11,9 @@ API RESTful desenvolvida em **.NET 10** para gerenciar pets e calcular automatic
 - **Entity Framework Core 10** — acesso a dados e gerenciamento de migrations.
 - **SQLite** — banco de dados relacional local (`PetShop.db`).
 - **Swagger / Swashbuckle** — documentação interativa disponível em ambiente de desenvolvimento.
+- **xUnit** e **Microsoft.NET.Test.Sdk** — criação e execução dos testes automatizados.
+- **Entity Framework Core InMemory** — banco em memória isolado para os testes, sem depender do SQLite local.
+- **Coverlet** — coleta de dados de cobertura de código.
 
 ---
 
