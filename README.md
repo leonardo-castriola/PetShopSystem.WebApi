@@ -1,58 +1,87 @@
 # 🐾 PetShop Management API
 
-API RESTful desenvolvida em **.NET** para o gerenciamento de Pets e cálculo automatizado de serviços de banho, aplicando boas práticas de arquitetura em camadas, Injeção de Dependência (DI) e persistência de dados relacional.
+API RESTful desenvolvida em **.NET 10** para gerenciar pets e calcular automaticamente o valor do banho. O projeto usa ASP.NET Core Web API, Entity Framework Core, injeção de dependência e banco de dados SQLite.
 
 ---
 
-## 🚀 Tecnologias Utilizadas
+## 🚀 Tecnologias
 
-* **C# / .NET 10** — Plataforma principal de desenvolvimento.
-* **ASP.NET Core Web API** — Construção dos endpoints RESTful e configuração de middlewares.
-* **Entity Framework Core (EF Core)** — ORM para mapeamento objeto-relacional e controle de *Migrations*.
-* **SQLite** — Banco de dados relacional leve e embarcado (`PetShop.db`).
-* **Swagger (Swashbuckle)** — Documentação interativa e testes dos endpoints da API.
-
----
-
-## ⚙️ Como Rodar o Projeto
-
-1. **Abra a solução no Visual Studio:**
-   * Abra o arquivo `PetShopSystem.WebApi.slnx` (ou a pasta do projeto) no Visual Studio.
-2. **Aplique as Migrations (opcional via Console):**
-   * No menu superior, acesse **Ferramentas > Gerenciador de Pacotes do NuGet > Console do Gerenciador de Pacotes** e execute:
-     ```powershell
-     Update-Database
-     ```
-   * *(Nota: A aplicação também já está configurada para aplicar as migrations pendentes automaticamente ao iniciar).*
-3. **Execute a aplicação:**
-   * Pressione **F5** (ou clique no botão **https / http** no topo do Visual Studio).
-   * O navegador abrirá automaticamente na interface interativa do **Swagger** (`/swagger/index.html`).
+- **C# / .NET 10** — plataforma de desenvolvimento.
+- **ASP.NET Core Web API** — construção da API REST e configuração do pipeline HTTP.
+- **Entity Framework Core 10** — acesso a dados e gerenciamento de migrations.
+- **SQLite** — banco de dados relacional local (`PetShop.db`).
+- **Swagger / Swashbuckle** — documentação interativa disponível em ambiente de desenvolvimento.
 
 ---
 
-## 📌 Principais Endpoints
+## ⚙️ Como executar
 
-A rota base do controlador é `/api/pet`:
+1. Abra `PetShopSystem.WebApi.slnx` no Visual Studio.
+2. Execute o projeto com **F5** ou escolha o perfil `https` ou `http`.
+3. A aplicação aplica automaticamente as migrations pendentes na inicialização.
+4. No ambiente de desenvolvimento, acesse `/swagger` para explorar e chamar os endpoints.
 
-| Método HTTP | Endpoint | Descrição | Retorno Principal |
-| :---: | :--- | :--- | :---: |
-| `POST` | `/api/pet` | Cadastra um novo Pet no banco de dados | `201 Created` |
-| `GET` | `/api/pet` | Lista todos os Pets cadastrados | `200 OK` |
-| `GET` | `/api/pet/{id}` | Busca os dados de um Pet específico pelo ID | `200 OK` / `404 Not Found` |
-| `PUT` | `/api/pet/{id}` | Atualiza os dados de um Pet existente | `200 OK` / `404 Not Found` |
-| `DELETE` | `/api/pet/{id}` | Remove um Pet do sistema pelo ID | `204 No Content` |
-| `GET` | `/api/pet/{id}/calcular-banho` | Calcula o valor do banho com base no peso e raça do Pet | `200 OK` / `404 Not Found` |
+Se preferir aplicar a migration manualmente pelo Console do Gerenciador de Pacotes do NuGet, selecione o projeto `PetShopSystem.WebApi` e execute:
+
+```powershell
+Update-Database
+```
+
+A string de conexão padrão está em `PetShopSystem.WebApi/appsettings.json` e cria o arquivo `PetShop.db`.
 
 ---
 
-## 💡 Regra de Negócio — Cálculo do Banho
+## 📌 Endpoints
 
-O serviço `BanhoService` calcula o valor do banho seguindo as regras abaixo:
+A rota base é `/api/pet`.
 
-* **Por Faixa de Peso:**
-  * Até **10 kg**: `R$ 40,00`
-  * Acima de **10 kg** até **25 kg**: `R$ 60,00`
-  * Acima de **25 kg**: `R$ 80,00`
-* **Adicional por Raça (`RacaPet`):**
-  * `0` = Outra | `1` = Poodle | `2` = Vira-Lata | `3` = Golden Retriever
-  * Caso a raça seja **Poodle (`1`)**, é acrescido um valor adicional de **`R$ 10,00`**.
+| Método | Endpoint | Descrição | Respostas principais |
+|:---:|:---|:---|:---:|
+| `POST` | `/api/pet` | Cadastra um pet | `201 Created` / `400 Bad Request` |
+| `GET` | `/api/pet` | Lista os pets cadastrados | `200 OK` |
+| `GET` | `/api/pet/{id}` | Busca um pet pelo ID | `200 OK` / `400 Bad Request` / `404 Not Found` |
+| `PUT` | `/api/pet/{id}` | Atualiza os dados de um pet | `200 OK` / `400 Bad Request` / `404 Not Found` |
+| `DELETE` | `/api/pet/{id}` | Remove um pet | `204 No Content` / `400 Bad Request` / `404 Not Found` |
+| `GET` | `/api/pet/{id}/calcular-banho` | Calcula o valor do banho | `200 OK` / `400 Bad Request` / `404 Not Found` |
+
+### Dados do pet
+
+O cadastro e a atualização recebem um JSON com nome, peso em quilogramas e raça. O ID é gerado pelo sistema.
+
+```json
+{
+  "nome": "Mel",
+  "peso": 8.5,
+  "raca": 1
+}
+```
+
+O nome deve ter entre 1 e 100 caracteres, o peso deve ser maior que zero e não ultrapassar 1000 kg, e a raça deve corresponder a um valor válido do enum `RacaPet`.
+
+---
+
+## 💡 Regra de cálculo do banho
+
+O serviço `BanhoService` calcula o preço pela faixa de peso e, quando aplicável, soma o adicional da raça:
+
+| Peso | Valor base |
+|:---|---:|
+| Até **10 kg** | `R$ 40,00` |
+| Acima de **10 kg** até **25 kg** | `R$ 60,00` |
+| Acima de **25 kg** | `R$ 80,00` |
+
+Valores de `RacaPet`:
+
+- `0` — Outra
+- `1` — Poodle (**adicional de R$ 10,00**)
+- `2` — Vira-Lata
+- `3` — Golden Retriever
+
+O endpoint de cálculo retorna o ID do pet e o valor calculado, por exemplo:
+
+```json
+{
+  "petId": 1,
+  "valorBanho": 50.00
+}
+```
