@@ -60,6 +60,24 @@ O nome deve ter entre 1 e 100 caracteres, o peso deve ser maior que zero e não 
 
 ---
 
+## 🧪 Como executar os testes
+
+O projeto de testes `PetShopSystem.Tests` contém testes unitários para o cálculo do banho, usando um banco em memória isolado por teste. Na raiz do repositório, execute:
+
+```bash
+dotnet test PetShopSystem.slnx
+```
+
+Para executar somente o projeto de testes:
+
+```bash
+dotnet test PetShopSystem.Tests/PetShopSystem.Tests.csproj
+```
+
+No Visual Studio, abra a solução e use **Testar > Executar Todos os Testes**. Na primeira execução, o .NET restaura os pacotes NuGet; é necessário ter acesso ao feed configurado.
+
+---
+
 ## 💡 Regra de cálculo do banho
 
 O serviço `BanhoService` calcula o preço pela faixa de peso e, quando aplicável, soma o adicional da raça:

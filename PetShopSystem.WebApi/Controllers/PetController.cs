@@ -28,7 +28,7 @@ namespace PetShopSystem.WebApi.Controllers
         }
 
         // 1. POST: api/pet (Cadastrar um novo Pet)
-        [HttpPost("Cadastrar um novo Pet")]
+        [HttpPost]
         public async Task<ActionResult<Pet>> CriarPet([FromBody] Pet novoPet)
         {
             novoPet.Id = 0;
@@ -42,7 +42,7 @@ namespace PetShopSystem.WebApi.Controllers
         }
 
         // 2. GET: api/pet (Listar todos os Pets)
-        [HttpGet("Listar todos os Pets")]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<Pet>>> ObterTodos()
         {
             var pets = await _context.Pets.AsNoTracking().ToListAsync();
@@ -50,7 +50,7 @@ namespace PetShopSystem.WebApi.Controllers
         }
 
         // 3. GET: api/pet/{id} (Buscar um Pet específico por ID)
-        [HttpGet("{id:int}/Buscar um Pet específico por ID")]
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<Pet>> ObterPorId(int id)
         {
             if (id <= 0)
@@ -69,7 +69,7 @@ namespace PetShopSystem.WebApi.Controllers
         }
        
         // 4. GET: api/pet/{id}/calcular-banho (Calcular o banho do Pet)
-        [HttpGet("{id:int}/Calcular o banho do Pet")]
+        [HttpGet("{id:int}/calcular-banho")]
         public async Task<ActionResult<CalculoBanhoResponse>> CalcularBanho(int id)
         {
             try
@@ -97,7 +97,7 @@ namespace PetShopSystem.WebApi.Controllers
         }
 
         // 5. PUT: api/pet/{id} (Atualizar os dados de um Pet existente)
-        [HttpPut("{id:int}/Atualizar um Pet existente")]
+        [HttpPut("{id:int}")]
         public async Task<ActionResult<Pet>> AtualizarPet(int id, [FromBody] Pet petAtualizado)
         {
             if (id <= 0)
@@ -127,7 +127,7 @@ namespace PetShopSystem.WebApi.Controllers
         }
 
         // 6. DELETE: api/pet/{id} (Remover um Pet pelo ID)
-        [HttpDelete("{id:int}/Remover um Pet pelo ID")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeletarPet(int id)
         {
             if (id <= 0)

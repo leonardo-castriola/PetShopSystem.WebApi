@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="PetShopSystem.Tests/PetShopSystem.Tests.csproj" Id="96e2a09d-3ad2-4e96-befa-27364d825271" />
   <Project Path="PetShopSystem.WebApi/PetShopSystem.WebApi.csproj" />
 </Solution>
